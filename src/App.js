@@ -17,10 +17,7 @@ function StarRating({ rating }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
       {[1,2,3,4,5].map(i => (
-        <span key={i} style={{
-          fontSize: 14,
-          color: i <= Math.round(rating) ? '#D4900A' : '#ddd'
-        }}>★</span>
+        <span key={i} style={{ fontSize: 14, color: i <= Math.round(rating) ? '#D4900A' : '#ddd' }}>★</span>
       ))}
       <span style={{ fontSize: 13, fontWeight: 500, color: '#333' }}>{rating}</span>
     </div>
@@ -72,7 +69,8 @@ function App() {
     service.getDetails(
       { placeId: apartment.place_id, fields: ['reviews', 'name', 'photos'] },
       async (place, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK && place.reviews) {if (place.photos) setSelectedApartment(prev => ({ ...prev, photos: place.photos }));
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && place.reviews) {
+          if (place.photos) setSelectedApartment(prev => ({ ...prev, photos: place.photos }));
           const reviewText = place.reviews.map(r => r.text).join('\n\n');
           try {
             const response = await axios.post('https://ratemyspot-server.onrender.com/api/summarize', {
@@ -97,21 +95,20 @@ function App() {
     fillOpacity: 1,
     strokeColor: '#ffffff',
     strokeWeight: 2,
-    scale: 1.8,
+    scale: 2,
     anchor: new window.google.maps.Point(12, 22),
+    labelOrigin: new window.google.maps.Point(12, 9),
   });
 
   return (
     <LoadScript googleMapsApiKey="AIzaSyBGNDvvjBWtpAWZXtTnTEWgJ0sYigcrW0g" libraries={libraries}>
       <div style={{ position: 'relative', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif' }}>
 
-        {/* Top Bar */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0,
           padding: '14px 16px', display: 'flex', alignItems: 'center',
           gap: 12, zIndex: 10
         }}>
-          {/* Logo */}
           <div style={{
             background: 'white', borderRadius: 50, padding: '8px 16px',
             fontWeight: 600, fontSize: 15, boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
@@ -120,7 +117,6 @@ function App() {
             Rate<span style={{ color: '#2E9E68' }}>My</span>Spot
           </div>
 
-          {/* Search */}
           <StandaloneSearchBox
             onLoad={(ref) => (searchBox.current = ref)}
             onPlacesChanged={onPlacesChanged}
@@ -136,7 +132,6 @@ function App() {
             />
           </StandaloneSearchBox>
 
-          {/* Filter button */}
           <div style={{
             background: 'white', borderRadius: 50, padding: '10px 16px',
             fontSize: 13, fontWeight: 500, boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
@@ -146,7 +141,6 @@ function App() {
           </div>
         </div>
 
-        {/* Legend */}
         <div style={{
           position: 'absolute', bottom: 24, left: 16, zIndex: 10,
           background: 'white', borderRadius: 12, padding: '10px 14px',
@@ -168,7 +162,6 @@ function App() {
           mapTypeId="hybrid"
           onLoad={onMapLoad}
           options={{
-            disableDefaultUI: false,
             zoomControl: true,
             mapTypeControl: false,
             streetViewControl: false,
@@ -186,8 +179,8 @@ function App() {
               label={{
                 text: apt.rating ? `${apt.rating}` : '?',
                 color: 'white',
-                fontSize: '11px',
-                fontWeight: 'bold'
+                fontSize: '10px',
+                fontWeight: 'bold',
               }}
               onClick={() => handleMarkerClick(apt)}
             />
@@ -200,21 +193,20 @@ function App() {
                 lng: selectedApartment.geometry.location.lng()
               }}
               onCloseClick={() => { setSelectedApartment(null); setSummary(''); }}
-              options={{ maxWidth: 320 }}
+              options={{ maxWidth: 320, pixelOffset: new window.google.maps.Size(0, -40) }}
             >
               <div style={{ padding: '4px 4px 8px', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif' }}>
-                {/* Card Header */}
                 <div style={{ marginBottom: 10 }}>
-  {selectedApartment.photos && selectedApartment.photos[0] && (
-    <img
-      src={selectedApartment.photos[0].getUrl({ maxWidth: 320, maxHeight: 160 })}
-      alt={selectedApartment.name}
-      style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, marginBottom: 10 }}
-    />
-  )}
-  <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a', marginBottom: 4 }}>
-    {selectedApartment.name}
-  </div>
+                  {selectedApartment.photos && selectedApartment.photos[0] && (
+                    <img
+                      src={selectedApartment.photos[0].getUrl({ maxWidth: 320, maxHeight: 160 })}
+                      alt={selectedApartment.name}
+                      style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, marginBottom: 10 }}
+                    />
+                  )}
+                  <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a', marginBottom: 4 }}>
+                    {selectedApartment.name}
+                  </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <StarRating rating={selectedApartment.rating} />
                     <span style={{
@@ -231,44 +223,26 @@ function App() {
 
                 <div style={{ height: '0.5px', background: '#eee', marginBottom: 10 }} />
 
-                {/* Pros / Cons */}
                 {loading ? (
                   <div style={{ textAlign: 'center', padding: '16px 0', color: '#888', fontSize: 13 }}>
                     ✨ Generating AI summary...
                   </div>
                 ) : (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                    {/* Pros */}
                     <div>
                       <div style={{ fontSize: 11, fontWeight: 600, color: '#2E9E68', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                         ✓ Pros
                       </div>
-{summary.includes('PROS:') ? (
-  <div style={{ fontSize: 11, color: '#444', lineHeight: 1.5 }}>
-    {summary.split('PROS:')[1]?.split('CONS:')[0]?.trim()}
-  </div>
-) : (
-  <pre style={{
-    whiteSpace: 'pre-wrap', fontFamily: 'inherit',
-    fontSize: 11, color: '#444', margin: 0, lineHeight: 1.5
-  }}>
-    {summary}
-  </pre>
-)}                      <pre style={{
-                        fontSize: 11, color: '#444', whiteSpace: 'pre-wrap',
-                        fontFamily: 'inherit', margin: 0, lineHeight: 1.5,
-                        display: summary.includes('PROS:') ? 'none' : 'block'
-                      }}>
-                        {summary}
-                      </pre>
-                      {summary.includes('PROS:') && (
+                      {summary.includes('PROS:') ? (
                         <div style={{ fontSize: 11, color: '#444', lineHeight: 1.5 }}>
                           {summary.split('PROS:')[1]?.split('CONS:')[0]?.trim()}
                         </div>
+                      ) : (
+                        <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: 11, color: '#444', margin: 0, lineHeight: 1.5 }}>
+                          {summary}
+                        </pre>
                       )}
                     </div>
-
-                    {/* Cons */}
                     {summary.includes('CONS:') && (
                       <div>
                         <div style={{ fontSize: 11, fontWeight: 600, color: '#C0392B', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
