@@ -75,7 +75,7 @@ function App() {
         if (status === window.google.maps.places.PlacesServiceStatus.OK && place.reviews) {
           const reviewText = place.reviews.map(r => r.text).join('\n\n');
           try {
-            const response = await axios.post('http://localhost:3001/api/summarize', {
+            const response = await axios.post('https://ratemyspot-server.onrender.com/api/summarize', {
               reviews: reviewText,
               apartmentName: place.name
             });
