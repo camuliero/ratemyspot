@@ -179,10 +179,18 @@ onTouchEnd={(e) => { e.preventDefault(); setMapType(type); }}
         </div>
 {inStreetView && (
   <div
-    onClick={() => {
+onClick={() => {
       const sv = mapRef.current.getStreetView();
       sv.setVisible(false);
       setInStreetView(false);
+      mapRef.current.setMapTypeId(mapType);
+    }}
+onTouchEnd={(e) => {
+      e.preventDefault();
+      const sv = mapRef.current.getStreetView();
+      sv.setVisible(false);
+      setInStreetView(false);
+      mapRef.current.setMapTypeId(mapType);
     }}
     style={{
       position: 'absolute', top: 80, left: '50%', transform: 'translateX(-50%)',
