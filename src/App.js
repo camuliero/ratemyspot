@@ -65,14 +65,14 @@ function App() {
   };
 
   const handleMarkerClick = (apartment) => {
-    setSelectedApartment(apartment);
+    setSelectedApartment({ ...apartment, photos: null });
     setSummary('');
     setLoading(true);
     const service = new window.google.maps.places.PlacesService(mapRef.current);
     service.getDetails(
-      { placeId: apartment.place_id, fields: ['reviews', 'name'] },
+      { placeId: apartment.place_id, fields: ['reviews', 'name', 'photos'] },
       async (place, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK && place.reviews) {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK && place.reviews) {if (place.photos) setSelectedApartment(prev => ({ ...prev, photos: place.photos }));
           const reviewText = place.reviews.map(r => r.text).join('\n\n');
           try {
             const response = await axios.post('https://ratemyspot-server.onrender.com/api/summarize', {
@@ -205,9 +205,16 @@ function App() {
               <div style={{ padding: '4px 4px 8px', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif' }}>
                 {/* Card Header */}
                 <div style={{ marginBottom: 10 }}>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a', marginBottom: 4 }}>
-                    {selectedApartment.name}
-                  </div>
+  {selectedApartment.photos && selectedApartment.photos[0] && (
+    <img
+      src={selectedApartment.photos[0].getUrl({ maxWidth: 320, maxHeight: 160 })}
+      alt={selectedApartment.name}
+      style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, marginBottom: 10 }}
+    />
+  )}
+  <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a', marginBottom: 4 }}>
+    {selectedApartment.name}
+  </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <StarRating rating={selectedApartment.rating} />
                     <span style={{
