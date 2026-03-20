@@ -30,6 +30,7 @@ function App() {
   const [selectedApartment, setSelectedApartment] = useState(null);
   const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(false);
+  const [mapType, setMapType] = useState('hybrid');
   const searchBox = useRef(null);
   const mapRef = useRef(null);
 
@@ -104,19 +105,22 @@ function App() {
     <LoadScript googleMapsApiKey="AIzaSyBGNDvvjBWtpAWZXtTnTEWgJ0sYigcrW0g" libraries={libraries}>
       <div style={{ position: 'relative', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif' }}>
 
+        {/* Top Bar */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0,
           padding: '14px 16px', display: 'flex', alignItems: 'center',
           gap: 12, zIndex: 10
         }}>
+          {/* Logo */}
           <div style={{
             background: 'white', borderRadius: 50, padding: '8px 16px',
-            fontWeight: 600, fontSize: 15, boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+            fontWeight: 600, fontSize: 22, boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
             whiteSpace: 'nowrap', color: '#1a1a1a'
           }}>
             Rate<span style={{ color: '#2E9E68' }}>My</span>Spot
           </div>
 
+          {/* Search */}
           <StandaloneSearchBox
             onLoad={(ref) => (searchBox.current = ref)}
             onPlacesChanged={onPlacesChanged}
@@ -132,15 +136,36 @@ function App() {
             />
           </StandaloneSearchBox>
 
-          <div style={{
-            background: 'white', borderRadius: 50, padding: '10px 16px',
-            fontSize: 13, fontWeight: 500, boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
-            cursor: 'pointer', whiteSpace: 'nowrap', color: '#1a1a1a'
-          }}>
-            ⚙ Filters
+          {/* Map Type Toggle */}
+          <div style={{ display: 'flex', background: 'white', borderRadius: 50, boxShadow: '0 2px 12px rgba(0,0,0,0.15)', overflow: 'hidden' }}>
+            {[['🛰', 'hybrid', 'Satellite'], ['🗺', 'roadmap', 'Map']].map(([icon, type, label]) => (
+              <div
+                key={type}
+                onClick={() => setMapType(type)}
+                style={{
+                  padding: '10px 14px', fontSize: 13, fontWeight: 500,
+                  cursor: 'pointer', whiteSpace: 'nowrap',
+                  color: mapType === type ? '#2E9E68' : '#1a1a1a',
+                  borderRight: '0.5px solid #eee',
+                  background: mapType === type ? '#f0faf5' : 'white'
+                }}>
+                {icon} {label}
+              </div>
+            ))}
+            <div
+              onClick={() => setMapType('streetview')}
+              style={{
+                padding: '10px 14px', fontSize: 13, fontWeight: 500,
+                cursor: 'pointer', whiteSpace: 'nowrap',
+                color: mapType === 'streetview' ? '#2E9E68' : '#1a1a1a',
+                background: mapType === 'streetview' ? '#f0faf5' : 'white'
+              }}>
+              🚶 Street
+            </div>
           </div>
         </div>
 
+        {/* Legend */}
         <div style={{
           position: 'absolute', bottom: 24, left: 16, zIndex: 10,
           background: 'white', borderRadius: 12, padding: '10px 14px',
@@ -159,12 +184,12 @@ function App() {
           mapContainerStyle={mapContainerStyle}
           center={center}
           zoom={13}
-          mapTypeId="hybrid"
+          mapTypeId={mapType === 'streetview' ? 'roadmap' : mapType}
           onLoad={onMapLoad}
           options={{
             zoomControl: true,
             mapTypeControl: false,
-            streetViewControl: false,
+            streetViewControl: mapType === 'streetview',
             fullscreenControl: false,
           }}
         >
