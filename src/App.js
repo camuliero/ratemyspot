@@ -146,11 +146,12 @@ function App() {
                   padding: '10px 14px', fontSize: 13, fontWeight: 500,
                   cursor: 'pointer', whiteSpace: 'nowrap',
                   color: mapType === type ? '#2E9E68' : '#1a1a1a',
-                  borderRight: '0.5px solid #eee',
+                  borderRight: type === 'hybrid' ? '0.5px solid #eee' : 'none',
                   background: mapType === type ? '#f0faf5' : 'white'
                 }}>
                 {icon} {label}
               </div>
+            ))}
             ))}
             <div
               onClick={() => setMapType('streetview')}
@@ -189,7 +190,7 @@ function App() {
           options={{
             zoomControl: true,
             mapTypeControl: false,
-            streetViewControl: mapType === 'streetview',
+            streetViewControl: true,
             fullscreenControl: false,
           }}
         >
