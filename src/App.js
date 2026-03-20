@@ -212,7 +212,7 @@ onTouchEnd={(e) => { e.preventDefault(); setMapType(type); }}
           mapContainerStyle={mapContainerStyle}
           center={center}
           zoom={13}
-          mapTypeId={mapType === 'streetview' ? 'roadmap' : mapType}
+          mapTypeId={mapType}
           onLoad={onMapLoad}
           options={{
             zoomControl: true,
