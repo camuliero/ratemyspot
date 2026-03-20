@@ -4,7 +4,9 @@ const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://ratemyspot.vercel.app'
+}));
 app.use(express.json());
 
 app.post('/api/summarize', async (req, res) => {
