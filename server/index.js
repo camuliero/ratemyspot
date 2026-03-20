@@ -8,7 +8,9 @@ app.use(cors({
   origin: 'https://ratemyspot.vercel.app'
 }));
 app.use(express.json());
-
+app.get('/test', (req, res) => {
+  res.json({ keyExists: !!process.env.ANTHROPIC_API_KEY, keyLength: process.env.ANTHROPIC_API_KEY?.length });
+});
 app.post('/api/summarize', async (req, res) => {
   const { reviews, apartmentName } = req.body;
 
