@@ -163,8 +163,19 @@ setSelectedApartment(prev => ({
             {[['🛰', 'hybrid', 'Satellite'], ['🗺', 'roadmap', 'Map']].map(([icon, type, label]) => (
               <div
                 key={type}
-                onClick={() => setMapType(type)}
-onTouchEnd={(e) => { e.preventDefault(); setMapType(type); }}
+                onClick={() => {
+  const sv = mapRef.current?.getStreetView();
+  if (sv) sv.setVisible(false);
+  setMapType(type);
+  setInStreetView(false);
+}}
+onTouchEnd={(e) => {
+  e.preventDefault();
+  const sv = mapRef.current?.getStreetView();
+  if (sv) sv.setVisible(false);
+  setMapType(type);
+  setInStreetView(false);
+}}
                 style={{
                   padding: '10px 14px', fontSize: 13, fontWeight: 500,
                   cursor: 'pointer', whiteSpace: 'nowrap',
