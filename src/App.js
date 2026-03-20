@@ -109,7 +109,7 @@ function App() {
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0,
           padding: '14px 16px', display: 'flex', alignItems: 'center',
-          gap: 12, zIndex: 10
+          justifyContent: 'center', gap: 12, zIndex: 10
         }}>
           {/* Logo */}
           <div style={{
@@ -151,7 +151,6 @@ function App() {
                 }}>
                 {icon} {label}
               </div>
-            ))}
             ))}
             <div
               onClick={() => setMapType('streetview')}
