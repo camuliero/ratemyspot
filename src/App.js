@@ -15,17 +15,6 @@ function getPinColor(rating) {
   return '#ef4444';
 }
 
-function StarRating({ rating }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-      {[1,2,3,4,5].map(i => (
-        <span key={i} style={{ fontSize: 13, color: i <= Math.round(rating) ? '#fbbf24' : 'rgba(255,255,255,0.2)' }}>★</span>
-      ))}
-      <span style={{ fontSize: 13, fontWeight: 600, color: '#fff', marginLeft: 2 }}>{rating}</span>
-    </div>
-  );
-}
-
 function App() {
   const [center, setCenter] = useState(defaultCenter);
   const [apartments, setApartments] = useState([]);
