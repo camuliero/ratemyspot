@@ -137,11 +137,12 @@ function App() {
           </StandaloneSearchBox>
 
           {/* Map Type Toggle */}
-          <div style={{ display: 'flex', background: 'white', borderRadius: 50, boxShadow: '0 2px 12px rgba(0,0,0,0.15)', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', background: 'white', borderRadius: 50, boxShadow: '0 2px 12px rgba(0,0,0,0.15)', overflow: 'hidden', WebkitTapHighlightColor: 'transparent' }}>
             {[['🛰', 'hybrid', 'Satellite'], ['🗺', 'roadmap', 'Map']].map(([icon, type, label]) => (
               <div
                 key={type}
                 onClick={() => setMapType(type)}
+onTouchEnd={(e) => { e.preventDefault(); setMapType(type); }}
                 style={{
                   padding: '10px 14px', fontSize: 13, fontWeight: 500,
                   cursor: 'pointer', whiteSpace: 'nowrap',
