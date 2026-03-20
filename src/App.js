@@ -131,7 +131,7 @@ setSelectedApartment(prev => ({
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0,
           padding: '14px 16px', display: 'flex', alignItems: 'center',
-          justifyContent: 'center', gap: 12, zIndex: 10
+          justifyContent: 'space-between', gap: 12, zIndex: 10
         }}>
           {/* Logo */}
           <div style={{
