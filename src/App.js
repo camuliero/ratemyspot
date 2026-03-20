@@ -1,6 +1,7 @@
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker, InfoWindow } from '@react-google-maps/api';
 import { useRef, useState, useCallback } from 'react';
 import axios from 'axios';
+import Splash from './Splash';
 
 const mapContainerStyle = { width: '100vw', height: '100vh' };
 const defaultCenter = { lat: 34.0754, lng: -84.2941 };
@@ -22,6 +23,7 @@ function App() {
   const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(false);
   const [mapType, setMapType] = useState('hybrid');
+  const [showSplash, setShowSplash] = useState(true);
   const [inStreetView, setInStreetView] = useState(false);
   const searchBox = useRef(null);
   const mapRef = useRef(null);
@@ -68,7 +70,15 @@ function App() {
     const center = mapRef.current.getCenter();
     searchApartments(center);
   };
-
+const handleSplashSearch = (place) => {
+    setShowSplash(false);
+    const newCenter = {
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng()
+    };
+    setCenter(newCenter);
+    setTimeout(() => searchApartments(place.geometry.location), 1000);
+  };
   const onPlacesChanged = () => {
     const places = searchBox.current.getPlaces();
     if (places && places.length > 0) {
@@ -142,14 +152,15 @@ function App() {
 
   return (
     <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={libraries}>
-      <style>{`
+{showSplash ? (
+        <Splash onSearch={handleSplashSearch} />
+      ) : (<>      <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
         .rms-input::placeholder { color: rgba(255,255,255,0.35); }
         .rms-input:focus { outline: none; border-color: rgba(74,222,128,0.4); }
         .rms-toggle-btn:hover { background: rgba(255,255,255,0.06); }
         .rms-pin-btn:hover { background: rgba(255,255,255,0.08); }
       `}</style>
-
       <div style={{ position: 'relative', fontFamily: "'Nunito', sans-serif" }}>
 
         {/* Top Bar */}
@@ -432,8 +443,8 @@ function App() {
           )}
         </GoogleMap>
       </div>
+</>)}
     </LoadScript>
   );
 }
-
 export default App;
