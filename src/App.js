@@ -37,6 +37,7 @@ function App() {
 
 const onMapLoad = useCallback((map) => {
     mapRef.current = map;
+    map.setMapTypeId('hybrid');
     const streetViewPanorama = map.getStreetView();
     streetViewPanorama.addListener('visible_changed', () => {
       setInStreetView(streetViewPanorama.getVisible());
