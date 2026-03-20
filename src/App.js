@@ -237,8 +237,15 @@ function App() {
                         ✓ Pros
                       </div>
                       {summary.split('\n')
-                        .filter(l => l.trim().startsWith('•') && summary.indexOf('CONS') > summary.indexOf(l) === false
-                          ? summary.split('PROS:')[1]?.split('CONS:')[0]?.includes(l)
+.filter(l => l.trim().startsWith('•') && (summary.indexOf('CONS') > summary.indexOf(l)) === false
+```
+
+Hit **Ctrl + S**, then run:
+```
+git add .
+git commit -m "fix build warnings"
+git push
+vercel --prod                          ? summary.split('PROS:')[1]?.split('CONS:')[0]?.includes(l)
                           : false
                         )
                         .slice(0, 3)
