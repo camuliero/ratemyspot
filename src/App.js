@@ -31,11 +31,17 @@ function App() {
   const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(false);
   const [mapType, setMapType] = useState('hybrid');
+  const [inStreetView, setInStreetView] = useState(false);
   const searchBox = useRef(null);
   const mapRef = useRef(null);
 
-  const onMapLoad = useCallback((map) => { mapRef.current = map; }, []);
-
+const onMapLoad = useCallback((map) => {
+    mapRef.current = map;
+    const streetViewPanorama = map.getStreetView();
+    streetViewPanorama.addListener('visible_changed', () => {
+      setInStreetView(streetViewPanorama.getVisible());
+    });
+  }, []);
   const searchApartments = (location) => {
     const service = new window.google.maps.places.PlacesService(mapRef.current);
     service.nearbySearch({
@@ -155,7 +161,22 @@ onTouchEnd={(e) => { e.preventDefault(); setMapType(type); }}
             ))}
           </div>
         </div>
-
+{inStreetView && (
+  <div
+    onClick={() => {
+      const sv = mapRef.current.getStreetView();
+      sv.setVisible(false);
+      setInStreetView(false);
+    }}
+    style={{
+      position: 'absolute', top: 80, left: '50%', transform: 'translateX(-50%)',
+      zIndex: 10, background: 'white', borderRadius: 50, padding: '10px 20px',
+      boxShadow: '0 2px 12px rgba(0,0,0,0.2)', fontSize: 13, fontWeight: 500,
+      cursor: 'pointer', color: '#1a1a1a', whiteSpace: 'nowrap'
+    }}>
+    ← Exit Street View
+  </div>
+)}
         {/* Legend */}
         <div style={{
           position: 'absolute', bottom: 24, left: 16, zIndex: 10,
