@@ -152,16 +152,6 @@ function App() {
                 {icon} {label}
               </div>
             ))}
-            <div
-              onClick={() => setMapType('streetview')}
-              style={{
-                padding: '10px 14px', fontSize: 13, fontWeight: 500,
-                cursor: 'pointer', whiteSpace: 'nowrap',
-                color: mapType === 'streetview' ? '#2E9E68' : '#1a1a1a',
-                background: mapType === 'streetview' ? '#f0faf5' : 'white'
-              }}>
-              🚶 Street
-            </div>
           </div>
         </div>
 
