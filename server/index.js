@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors({
-  origin: 'https://ratemyspot.vercel.app'
+  origin: ['https://ratemyspot.vercel.app', 'https://ratemyspot.net', 'https://www.ratemyspot.net']
 }));
 app.use(express.json());
 app.get('/test', (req, res) => {
