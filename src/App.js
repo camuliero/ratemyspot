@@ -319,109 +319,112 @@ function App() {
               onCloseClick={() => { setSelectedApartment(null); setSummary(''); }}
               options={{ maxWidth: 340, pixelOffset: new window.google.maps.Size(0, -40) }}
             >
-              <div style={{ fontFamily: "'Nunito', sans-serif", borderRadius: 16, overflow: 'hidden', margin: -11 }}>
-                {/* Property Photo */}
-                {selectedApartment.photos && selectedApartment.photos[0] && (
-                  <img
-                    src={selectedApartment.photos[0].getUrl({ maxWidth: 340, maxHeight: 160 })}
-                    alt={selectedApartment.name}
-                    style={{ width: '100%', height: 150, objectFit: 'cover', display: 'block' }}
-                  />
-                )}
+<div style={{ fontFamily: "'Nunito', sans-serif", padding: '4px 4px 8px' }}>
+  {/* Property Photo */}
+  {selectedApartment.photos && selectedApartment.photos[0] && (
+    <img
+      src={selectedApartment.photos[0].getUrl({ maxWidth: 340, maxHeight: 160 })}
+      alt={selectedApartment.name}
+      style={{ width: '100%', height: 150, objectFit: 'cover', borderRadius: 8, marginBottom: 10, display: 'block' }}
+    />
+  )}
 
-                <div style={{ padding: '14px 16px', background: '#0d1f12' }}>
-                  {/* Header */}
-                  <div style={{ marginBottom: 10 }}>
-                    <div style={{ fontSize: 16, fontWeight: 900, color: '#fff', marginBottom: 5, letterSpacing: '-0.3px' }}>
-                      {selectedApartment.name}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <StarRating rating={selectedApartment.rating} />
-                      <span style={{
-                        fontSize: 10, background: 'rgba(167,139,250,0.15)', color: '#a78bfa',
-                        borderRadius: 50, padding: '3px 10px', fontWeight: 700,
-                        border: '1px solid rgba(167,139,250,0.2)', letterSpacing: '0.3px'
-                      }}>✦ AI Summary</span>
-                    </div>
+  {/* Header */}
+  <div style={{ marginBottom: 10 }}>
+    <div style={{ fontSize: 16, fontWeight: 900, color: '#1a1a1a', marginBottom: 5, letterSpacing: '-0.3px' }}>
+      {selectedApartment.name}
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        {[1,2,3,4,5].map(i => (
+          <span key={i} style={{ fontSize: 13, color: i <= Math.round(selectedApartment.rating) ? '#f59e0b' : '#ddd' }}>★</span>
+        ))}
+        <span style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', marginLeft: 2 }}>{selectedApartment.rating}</span>
+      </div>
+      <span style={{
+        fontSize: 10, background: '#F0EBF9', color: '#7B5EA7',
+        borderRadius: 50, padding: '3px 10px', fontWeight: 700,
+        border: '1px solid rgba(123,94,167,0.2)', letterSpacing: '0.3px'
+      }}>✦ AI Summary</span>
+    </div>
 
-                    {selectedApartment.user_ratings_total && (
-                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 4, fontWeight: 600 }}>
-                        {selectedApartment.user_ratings_total} total reviews
-                      </div>
-                    )}
+    {selectedApartment.user_ratings_total && (
+      <div style={{ fontSize: 11, color: '#888', marginTop: 4, fontWeight: 600 }}>
+        {selectedApartment.user_ratings_total} total reviews
+      </div>
+    )}
 
-                    {selectedApartment.reviewBreakdown && (
-                      <div style={{ marginTop: 8 }}>
-                        {[5,4,3,2,1].map(star => (
-                          <div key={star} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                            <span style={{ fontSize: 10, color: '#fbbf24', minWidth: 16, fontWeight: 700 }}>{star}★</span>
-                            <div style={{ flex: 1, height: 3, background: 'rgba(255,255,255,0.1)', borderRadius: 2 }}>
-                              <div style={{
-                                height: 3, borderRadius: 2, background: '#4ade80',
-                                width: `${(selectedApartment.reviewBreakdown[star] / Object.values(selectedApartment.reviewBreakdown).reduce((a,b) => a+b, 0)) * 100}%`
-                              }} />
-                            </div>
-                            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', minWidth: 12, fontWeight: 600 }}>{selectedApartment.reviewBreakdown[star]}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+    {selectedApartment.reviewBreakdown && (
+      <div style={{ marginTop: 8 }}>
+        {[5,4,3,2,1].map(star => (
+          <div key={star} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+            <span style={{ fontSize: 10, color: '#f59e0b', minWidth: 16, fontWeight: 700 }}>{star}★</span>
+            <div style={{ flex: 1, height: 3, background: '#f0f0f0', borderRadius: 2 }}>
+              <div style={{
+                height: 3, borderRadius: 2, background: '#2E9E68',
+                width: `${(selectedApartment.reviewBreakdown[star] / Object.values(selectedApartment.reviewBreakdown).reduce((a,b) => a+b, 0)) * 100}%`
+              }} />
+            </div>
+            <span style={{ fontSize: 10, color: '#888', minWidth: 12, fontWeight: 600 }}>{selectedApartment.reviewBreakdown[star]}</span>
+          </div>
+        ))}
+      </div>
+    )}
 
-                    {selectedApartment.vicinity && (
-                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 6, fontWeight: 600 }}>
-                        📍 {selectedApartment.vicinity}
-                      </div>
-                    )}
-                  </div>
+    {selectedApartment.vicinity && (
+      <div style={{ fontSize: 11, color: '#888', marginTop: 6, fontWeight: 600 }}>
+        📍 {selectedApartment.vicinity}
+      </div>
+    )}
+  </div>
 
-                  <div style={{ height: '1px', background: 'rgba(255,255,255,0.08)', marginBottom: 12 }} />
+  <div style={{ height: '1px', background: '#eee', marginBottom: 12 }} />
 
-                  {/* Pros / Cons */}
-                  {loading ? (
-                    <div style={{ textAlign: 'center', padding: '16px 0', color: 'rgba(255,255,255,0.4)', fontSize: 13, fontWeight: 600 }}>
-                      ✨ Generating AI summary...
-                    </div>
-                  ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                      <div>
-                        <div style={{ fontSize: 10, fontWeight: 800, color: '#4ade80', marginBottom: 6, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                          ✓ Pros
-                        </div>
-                        {summary.includes('PROS:') ? (
-                          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, fontWeight: 500 }}>
-                            {summary.split('PROS:')[1]?.split('CONS:')[0]?.trim()}
-                          </div>
-                        ) : (
-                          <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: 11, color: 'rgba(255,255,255,0.55)', margin: 0, lineHeight: 1.6 }}>
-                            {summary}
-                          </pre>
-                        )}
-                      </div>
-                      {summary.includes('CONS:') && (
-                        <div>
-                          <div style={{ fontSize: 10, fontWeight: 800, color: '#f87171', marginBottom: 6, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                            ✗ Cons
-                          </div>
-                          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, fontWeight: 500 }}>
-                            {summary.split('CONS:')[1]?.trim()}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
+  {/* Pros / Cons */}
+  {loading ? (
+    <div style={{ textAlign: 'center', padding: '16px 0', color: '#888', fontSize: 13, fontWeight: 600 }}>
+      ✨ Generating AI summary...
+    </div>
+  ) : (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div>
+        <div style={{ fontSize: 10, fontWeight: 800, color: '#2E9E68', marginBottom: 6, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+          ✓ Pros
+        </div>
+        {summary.includes('PROS:') ? (
+          <div style={{ fontSize: 11, color: '#444', lineHeight: 1.6, fontWeight: 500 }}>
+            {summary.split('PROS:')[1]?.split('CONS:')[0]?.trim()}
+          </div>
+        ) : (
+          <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit', fontSize: 11, color: '#444', margin: 0, lineHeight: 1.6 }}>
+            {summary}
+          </pre>
+        )}
+      </div>
+      {summary.includes('CONS:') && (
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 800, color: '#ef4444', marginBottom: 6, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+            ✗ Cons
+          </div>
+          <div style={{ fontSize: 11, color: '#444', lineHeight: 1.6, fontWeight: 500 }}>
+            {summary.split('CONS:')[1]?.trim()}
+          </div>
+        </div>
+      )}
+    </div>
+  )}
 
-                  {/* Website */}
-                  {selectedApartment.website && (
-                    <a href={selectedApartment.website} target="_blank" rel="noreferrer" style={{
-                      display: 'block', marginTop: 12, fontSize: 11, color: '#4ade80',
-                      textDecoration: 'none', fontWeight: 700, letterSpacing: '0.3px'
-                    }}>
-                      🌐 Visit Website →
-                    </a>
-                  )}
-                </div>
-              </div>
-            </InfoWindow>
+  {/* Website */}
+  {selectedApartment.website && (
+    <a href={selectedApartment.website} target="_blank" rel="noreferrer" style={{
+      display: 'block', marginTop: 12, fontSize: 11, color: '#2E9E68',
+      textDecoration: 'none', fontWeight: 700, letterSpacing: '0.3px'
+    }}>
+      🌐 Visit Website →
+    </a>
+  )}
+</div>
+</InfoWindow>
           )}
         </GoogleMap>
       </div>
