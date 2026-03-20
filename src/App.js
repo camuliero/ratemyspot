@@ -78,10 +78,22 @@ const searchCurrentArea = () => {
     setLoading(true);
     const service = new window.google.maps.places.PlacesService(mapRef.current);
     service.getDetails(
-      { placeId: apartment.place_id, fields: ['reviews', 'name', 'photos'] },
+      { placeId: apartment.place_id, fields: ['reviews', 'name', 'photos', 'rating', 'user_ratings_total', 'website'] },
       async (place, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK && place.reviews) {
           if (place.photos) setSelectedApartment(prev => ({ ...prev, photos: place.photos }));
+setSelectedApartment(prev => ({ 
+  ...prev, 
+  website: place.website,
+  user_ratings_total: place.user_ratings_total,
+  reviewBreakdown: place.reviews ? {
+    5: place.reviews.filter(r => r.rating === 5).length,
+    4: place.reviews.filter(r => r.rating === 4).length,
+    3: place.reviews.filter(r => r.rating === 3).length,
+    2: place.reviews.filter(r => r.rating === 2).length,
+    1: place.reviews.filter(r => r.rating === 1).length,
+  } : null
+}));
           const reviewText = place.reviews.map(r => r.text).join('\n\n');
           try {
             const response = await axios.post('https://ratemyspot-server.onrender.com/api/summarize', {
@@ -269,10 +281,42 @@ onTouchEnd={(e) => { e.preventDefault(); setMapType(type); }}
                     }}>AI Summary</span>
                   </div>
                   {selectedApartment.vicinity && (
-                    <div style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
-                      {selectedApartment.vicinity}
-                    </div>
-                  )}
+  <div style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+    {selectedApartment.vicinity}
+  </div>
+)}
+
+{selectedApartment.user_ratings_total && (
+  <div style={{ fontSize: 11, color: '#888', marginTop: 4 }}>
+    {selectedApartment.user_ratings_total} total reviews
+  </div>
+)}
+
+{selectedApartment.reviewBreakdown && (
+  <div style={{ marginTop: 8 }}>
+    {[5,4,3,2,1].map(star => (
+      <div key={star} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+        <span style={{ fontSize: 10, color: '#D4900A', minWidth: 20 }}>{'★'.repeat(star)}</span>
+        <div style={{ flex: 1, height: 4, background: '#f0f0f0', borderRadius: 2 }}>
+          <div style={{
+            height: 4, borderRadius: 2, background: '#D4900A',
+            width: `${(selectedApartment.reviewBreakdown[star] / Object.values(selectedApartment.reviewBreakdown).reduce((a,b) => a+b, 0)) * 100}%`
+          }} />
+        </div>
+        <span style={{ fontSize: 10, color: '#888', minWidth: 12 }}>{selectedApartment.reviewBreakdown[star]}</span>
+      </div>
+    ))}
+  </div>
+)}
+
+{selectedApartment.website && (
+  <a href={selectedApartment.website} target="_blank" rel="noreferrer" style={{
+    display: 'block', marginTop: 8, fontSize: 11, color: '#2E9E68',
+    textDecoration: 'none', fontWeight: 500
+  }}>
+    🌐 Visit Website
+  </a>
+)}
                 </div>
 
                 <div style={{ height: '0.5px', background: '#eee', marginBottom: 10 }} />
