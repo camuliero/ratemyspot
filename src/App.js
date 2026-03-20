@@ -54,8 +54,11 @@ const onMapLoad = useCallback((map) => {
       }
     });
   };
-
-  const onPlacesChanged = () => {
+const searchCurrentArea = () => {
+    if (!mapRef.current) return;
+    const center = mapRef.current.getCenter();
+    searchApartments(center);
+  };  const onPlacesChanged = () => {
     const places = searchBox.current.getPlaces();
     if (places && places.length > 0) {
       const place = places[0];
@@ -177,6 +180,19 @@ onTouchEnd={(e) => { e.preventDefault(); setMapType(type); }}
     ← Exit Street View
   </div>
 )}
+
+        {/* Search This Area Button */}
+        <div
+          onClick={searchCurrentArea}
+          onTouchEnd={(e) => { e.preventDefault(); searchCurrentArea(); }}
+          style={{
+            position: 'absolute', top: 80, left: '50%', transform: 'translateX(-50%)',
+            zIndex: 10, background: 'white', borderRadius: 50, padding: '10px 20px',
+            boxShadow: '0 2px 12px rgba(0,0,0,0.2)', fontSize: 13, fontWeight: 500,
+            cursor: 'pointer', color: '#1a1a1a', whiteSpace: 'nowrap'
+          }}>
+          🔍 Search This Area
+        </div>
         {/* Legend */}
         <div style={{
           position: 'absolute', bottom: 24, left: 16, zIndex: 10,
