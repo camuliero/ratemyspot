@@ -35,17 +35,32 @@ function App() {
     });
   }, []);
 
-  const searchApartments = (location) => {
+ const searchApartments = (location) => {
     const service = new window.google.maps.places.PlacesService(mapRef.current);
+    let allResults = [];
+
+    const handleResults = (results, status, pagination) => {
+      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        allResults = [...allResults, ...results];
+        setApartments([...allResults]);
+        if (pagination && pagination.hasNextPage) {
+          setTimeout(() => pagination.nextPage(), 500);
+        }
+      }
+    };
+
     service.nearbySearch({
       location,
-      radius: 5000,
+      radius: 8000,
+      type: 'lodging',
+      keyword: 'apartment'
+    }, handleResults);
+
+    service.nearbySearch({
+      location,
+      radius: 8000,
       keyword: 'apartment complex'
-    }, (results, status) => {
-      if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        setApartments(results);
-      }
-    });
+    }, handleResults);
   };
 
   const searchCurrentArea = () => {
