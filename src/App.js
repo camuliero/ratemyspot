@@ -236,26 +236,18 @@ function App() {
                       <div style={{ fontSize: 11, fontWeight: 600, color: '#2E9E68', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                         ✓ Pros
                       </div>
-                      {summary.split('\n')
-.filter(l => l.trim().startsWith('•') && (summary.indexOf('CONS') > summary.indexOf(l)) === false
-```
-
-Hit **Ctrl + S**, then run:
-```
-git add .
-git commit -m "fix build warnings"
-git push
-vercel --prod                          ? summary.split('PROS:')[1]?.split('CONS:')[0]?.includes(l)
-                          : false
-                        )
-                        .slice(0, 3)
-                        .map((line, i) => (
-                          <div key={i} style={{ fontSize: 11, color: '#444', padding: '3px 0', borderBottom: '0.5px solid #f0f0f0', lineHeight: 1.4 }}>
-                            {line.replace('•', '').trim()}
-                          </div>
-                        ))
-                      }
-                      <pre style={{
+{summary.includes('PROS:') ? (
+  <div style={{ fontSize: 11, color: '#444', lineHeight: 1.5 }}>
+    {summary.split('PROS:')[1]?.split('CONS:')[0]?.trim()}
+  </div>
+) : (
+  <pre style={{
+    whiteSpace: 'pre-wrap', fontFamily: 'inherit',
+    fontSize: 11, color: '#444', margin: 0, lineHeight: 1.5
+  }}>
+    {summary}
+  </pre>
+)}                      <pre style={{
                         fontSize: 11, color: '#444', whiteSpace: 'pre-wrap',
                         fontFamily: 'inherit', margin: 0, lineHeight: 1.5,
                         display: summary.includes('PROS:') ? 'none' : 'block'
